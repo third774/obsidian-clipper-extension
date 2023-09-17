@@ -58,6 +58,7 @@
         fileName = fileName.replace(":", "").replace(/[/\\?%*|"<>]/g, "-");
       } else {
         fileName = fileName
+          .replace(/\|/g, "-")
           .replace(/:/g, "")
           .replace(/\//g, "-")
           .replace(/\\/g, "-");
