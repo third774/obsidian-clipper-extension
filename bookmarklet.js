@@ -4,7 +4,7 @@
     import("https://unpkg.com/@tehshrike/readability@0.2.0"),
   ]).then(async ([{ default: Turndown }, { default: Readability }]) => {
     /* Optional vault name */
-    const vault = "";
+    const vault = "Notes";
 
     /* Optional folder name such as "Clippings/" */
     const folder = "Clippings/";
@@ -13,17 +13,17 @@
     let tags = "clippings";
 
     /* Parse the site's meta keywords content into tags, if present */
-    if (document.querySelector('meta[name="keywords" i]')) {
-      var keywords = document
-        .querySelector('meta[name="keywords" i]')
-        .getAttribute("content")
-        .split(",");
+    // if (document.querySelector('meta[name="keywords" i]')) {
+    //   var keywords = document
+    //     .querySelector('meta[name="keywords" i]')
+    //     .getAttribute("content")
+    //     .split(",");
 
-      keywords.forEach(function (keyword) {
-        let tag = " " + keyword.split(" ").join("");
-        tags += tag;
-      });
-    }
+    //   keywords.forEach(function (keyword) {
+    //     let tag = " " + keyword.split(" ").join("");
+    //     tags += tag;
+    //   });
+    // }
 
     function getSelectionHtml() {
       var html = "";
@@ -51,15 +51,14 @@
     ).parse();
 
     function getFileName(fileName) {
-      var userAgent = window.navigator.userAgent,
-        platform = window.navigator.platform,
-        windowsPlatforms = ["Win32", "Win64", "Windows", "WinCE"];
+      const platform = window.navigator.platform;
+      const windowsPlatforms = ["Win32", "Win64", "Windows", "WinCE"];
 
       if (windowsPlatforms.indexOf(platform) !== -1) {
         fileName = fileName.replace(":", "").replace(/[/\\?%*|"<>]/g, "-");
       } else {
         fileName = fileName
-          .replace(":", "")
+          .replace(/:/g, "")
           .replace(/\//g, "-")
           .replace(/\\/g, "-");
       }
@@ -90,18 +89,37 @@
     var date = new Date();
 
     function convertDate(date) {
-      var yyyy = date.getFullYear().toString();
-      var mm = (date.getMonth() + 1).toString();
-      var dd = date.getDate().toString();
-      var mmChars = mm.split("");
-      var ddChars = dd.split("");
-      return (
-        yyyy +
-        "-" +
-        (mmChars[1] ? mm : "0" + mmChars[0]) +
-        "-" +
-        (ddChars[1] ? dd : "0" + ddChars[0])
-      );
+      const yyyy = date.getFullYear().toString();
+      const mm = (date.getMonth() + 1).toString();
+      const dd = date.getDate().toString();
+      const hours = date.getHours().toString();
+      const minutes = date.getMinutes().toString();
+      const seconds = date.getSeconds().toString();
+      const milliseconds = date.getMilliseconds().toString();
+      const offset = date.getTimezoneOffset();
+
+      const offsetHours = Math.floor(offset / 60).toString();
+      const offsetMinutes = (offset % 60).toString();
+
+      return [
+        yyyy,
+        "-",
+        mm.padStart(2, "0"),
+        "-",
+        dd.padStart(2, "0"),
+        "T",
+        hours.padStart(2, "0"),
+        ":",
+        minutes.padStart(2, "0"),
+        ":",
+        seconds.padStart(2, "0"),
+        ".",
+        milliseconds.padStart(3, "0"),
+        "-",
+        offsetHours.padStart(2, "0"),
+        ":",
+        offsetMinutes.padStart(2, "0"),
+      ].join("");
     }
 
     const today = convertDate(date);
